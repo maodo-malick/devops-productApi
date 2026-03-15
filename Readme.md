@@ -106,6 +106,7 @@ spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
 ### Image Docker Hub
 ```
 mdamalick/product-api:latest
+mdamalick/product-api:latest
 ```
 
 ### Build & Push
