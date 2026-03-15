@@ -76,11 +76,11 @@ Base URL : `http://localhost:8086`
 ### Exemple de requête POST
 
 ```json
-POST /api/products
-{
+POST{
   "name": "Laptop",
-  "quantity": 10,
-  "price": 999.99
+  "description": "PC portable",
+  "price": 850.0,
+  "quantity": 10
 }
 ```
 
@@ -115,32 +115,44 @@ mvn clean package -DskipTests
 docker build -t mdamalick/product-api:latest .
 docker login
 docker push mdamalick/product-api:latest
+---------------------
+mvn clean package -DskipTests
+docker build -t christianwdck/product-api:latest .
+docker login
+docker push christianwdc/product-api:latest
 ```
 
 ### Lancer le conteneur
 
 ```bash
 docker run --name devopsExam -p 8086:8086 mdamalick/product-api:latest
+docker run -d --name product-api --restart always -p 8086:8086 -e SPRING_DATASOURCE_URL="jdbc:mysql://192.168.1.108:3307/product_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true" -e SPRING_DATASOURCE_USERNAME=root -e SPRING_DATASOURCE_PASSWORD="Wadja12345?!" christianwdc/product-api:latest
 ```
 
 ### Dockerfile
 
 ```dockerfile
-FROM amazoncorretto:17
+# Étape 1 : Build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
-COPY target/product-api-0.3.0.jar app.jar
+COPY pom.xml .
+COPY src ./src
+COPY settings.xml /root/.m2/settings.xml
+RUN mvn package -DskipTests
+
+# Étape2 : Runtime
+FROM eclipse-temurin:17-jdk-jammy
+WORKDIR /app
+COPY --from=build /app/target/product-api-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8086
 ENTRYPOINT ["java", "-jar", "app.jar"]
-```
-
----
 
 ## Ansible
 
 Déploiement automatisé sur VM Ubuntu depuis WSL.
 
 ```bash
-ansible-playbook -i inventory.yml deploy.yml
+ansible-playbook -i inventory.ini playbook.yaml
 ```
 
 ---
@@ -149,7 +161,7 @@ ansible-playbook -i inventory.yml deploy.yml
 
 - Java 17
 - Maven 3.x
-- MySQL 8.0 (port 3308)
+- MySQL 8.0 (port 3307)
 - Docker Desktop
 - Nexus Repository Manager (localhost:8081)
 - Ansible (WSL)
@@ -157,5 +169,5 @@ ansible-playbook -i inventory.yml deploy.yml
 ---
 
 ## Auteur
-
+**christianwdc** -L3 Génie Logiciel
 **mdamalick** — L3 Génie Logiciel
