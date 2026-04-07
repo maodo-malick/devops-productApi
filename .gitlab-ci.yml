@@ -7,7 +7,7 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   IMAGE_NAME: $DOCKER_IMAGE
 
-# Job 1 : Test
+# ── Job 1 : Test ─────────────────────────────────────
 test:
   stage: test
   image: maven:3.9.6-eclipse-temurin-17
@@ -17,14 +17,16 @@ test:
     paths:
       - .m2/repository
   before_script:
-    - cp settings.xml /root/.m2/settings.xml
+    before_script:
+      - cp settings-ci.xml /root/.m2/settings.xml
+      - mvn install:install-file -Dfile=product-core-0.3.0.jar -DgroupId=sn.isi.l3gl.core -DartifactId=product-core -Dversion=0.3.0 -Dpackaging=jar
   script:
     - mvn test
   artifacts:
     paths:
-      - target/
+      - target/surefire-reports/
 
-#  Job 2 : Build
+# ── Job 2 : Build ────────────────────────────────────
 build:
   stage: build
   image: maven:3.9.6-eclipse-temurin-17
@@ -34,14 +36,16 @@ build:
     paths:
       - .m2/repository
   before_script:
-    - cp settings-docker.xml /root/.m2/settings.xml
+    before_script:
+      - cp settings-ci.xml /root/.m2/settings.xml
+      - mvn install:install-file -Dfile=product-core-0.3.0.jar -DgroupId=sn.isi.l3gl.core -DartifactId=product-core -Dversion=0.3.0 -Dpackaging=jar
   script:
     - mvn package -DskipTests
   artifacts:
     paths:
       - target/*.jar
 
-#  Job 3 : Docker
+# ── Job 3 : Docker ───────────────────────────────────
 docker:
   stage: docker
   image: docker:24
