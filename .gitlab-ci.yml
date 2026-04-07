@@ -16,9 +16,8 @@ test:
   cache:
     paths:
       - .m2/repository
-  before_script:
     before_script:
-      - cp settings-ci.xml /root/.m2/settings.xml
+      - cp settings.xml /root/.m2/settings.xml
       - mvn install:install-file -Dfile=product-core-0.3.0.jar -DgroupId=sn.isi.l3gl.core -DartifactId=product-core -Dversion=0.3.0 -Dpackaging=jar
   script:
     - mvn test
@@ -35,12 +34,12 @@ build:
   cache:
     paths:
       - .m2/repository
-  before_script:
     before_script:
       - cp settings-ci.xml /root/.m2/settings.xml
       - mvn install:install-file -Dfile=product-core-0.3.0.jar -DgroupId=sn.isi.l3gl.core -DartifactId=product-core -Dversion=0.3.0 -Dpackaging=jar
   script:
     - mvn package -DskipTests
+    - mvn clean install
   artifacts:
     paths:
       - target/*.jar

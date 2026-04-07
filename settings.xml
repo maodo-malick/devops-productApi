@@ -1,18 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-  https://maven.apache.org/xsd/settings-1.0.0.xsd">
-  <servers>
-    <server>
-      <id>nexus-releases</id>
-      <username>christianwd6</username>
-      <password>Wadja12345&#63;&#33;</password>
-    </server>
-    <server>
-      <id>nexus-snapshots</id>
-      <username>christianwd6</username>
-      <password>Wadja12345&#63;&#33;</password>
-    </server>
-  </servers>
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+<mirrors>
+  <!-- Désactivation du Nexus local pour GitLab CI -->
+  <!-- Les builds CI utiliseront Maven Central -->
+</mirrors>
+
+<profiles>
+  <profile>
+    <id>ci-profile</id>
+    <repositories>
+      <repository>
+        <id>central</id>
+        <name>Maven Central</name>
+        <url>https://repo.maven.apache.org/maven2</url>
+        <releases>
+          <enabled>true</enabled>
+        </releases>
+        <snapshots>
+          <enabled>true</enabled>
+        </snapshots>
+      </repository>
+    </repositories>
+  </profile>
+</profiles>
+
+<activeProfiles>
+  <activeProfile>ci-profile</activeProfile>
+</activeProfiles>
 
 </settings>
