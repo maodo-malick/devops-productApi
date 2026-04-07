@@ -1,6 +1,7 @@
 package sn.isi.l3gl.api.productapi.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sn.isi.l3gl.core.productcore.entity.Product;
@@ -35,6 +36,9 @@ public class ProductController {
             @PathVariable Long id,
             @RequestParam Integer quantity) {
         return ResponseEntity.ok(productService.updateQuantity(id, quantity));
+    }
+    public interface ProductRepository extends JpaRepository<Product, Long> {
+        long countByQuantityLessThanEqual(int quantity);
     }
 
     // GET /api/products/low-stock/count

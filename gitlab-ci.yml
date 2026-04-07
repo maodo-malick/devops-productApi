@@ -1,0 +1,58 @@
+stages:
+  - test
+  - build
+  - docker
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  IMAGE_NAME: $DOCKER_IMAGE
+
+# Job 1 : Test
+test:
+  stage: test
+  image: maven:3.9.6-eclipse-temurin-17
+  only:
+    - develop
+  cache:
+    paths:
+      - .m2/repository
+  before_script:
+    - cp settings.xml /root/.m2/settings.xml
+  script:
+    - mvn test
+  artifacts:
+    paths:
+      - target/
+
+#  Job 2 : Build
+build:
+  stage: build
+  image: maven:3.9.6-eclipse-temurin-17
+  only:
+    - develop
+  cache:
+    paths:
+      - .m2/repository
+  before_script:
+    - cp settings.xml /root/.m2/settings.xml
+  script:
+    - mvn package -DskipTests
+  artifacts:
+    paths:
+      - target/*.jar
+
+#  Job 3 : Docker
+docker:
+  stage: docker
+  image: docker:24
+  only:
+    - develop
+  services:
+    - docker:24-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  script:
+    - docker build -t $IMAGE_NAME:latest .
+    - docker push $IMAGE_NAME:latest
