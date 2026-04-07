@@ -15,11 +15,4 @@
     </server>
   </servers>
 
-  <mirrors>
-    <mirror>
-      <id>nexus-mirror</id>
-      <mirrorOf>*</mirrorOf>
-      <url>http://host.docker.internal:8081/repository/maven-public/</url>
-    </mirror>
-  </mirrors>
 </settings>
