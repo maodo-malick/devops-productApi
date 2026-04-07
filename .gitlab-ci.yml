@@ -17,7 +17,7 @@ test:
     paths:
       - .m2/repository
     before_script:
-      - cp settings.xml /root/.m2/settings.xml
+      - cp settings-ci.xml /root/.m2/settings.xml
       - mvn install:install-file -Dfile=product-core-0.3.0.jar -DgroupId=sn.isi.l3gl.core -DartifactId=product-core -Dversion=0.3.0 -Dpackaging=jar
   script:
     - mvn test
