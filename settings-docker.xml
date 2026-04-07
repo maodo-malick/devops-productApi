@@ -1,0 +1,25 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+  https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <servers>
+        <server>
+            <id>nexus-releases</id>
+            <username>christianwd6</username>
+            <password>Wadja12345&#63;&#33;</password>
+        </server>
+        <server>
+            <id>nexus-snapshots</id>
+            <username>christianwd6</username>
+            <password>Wadja12345&#63;&#33;</password>
+        </server>
+    </servers>
+    <repositories>
+        <repository>
+            <id>nexus-releases</id>
+            <url>http://host.docker.internal:8081/repository/maven-releases/</url>
+            <releases><enabled>true</enabled></releases>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+    </repositories>
+</settings>

@@ -34,7 +34,7 @@ build:
     paths:
       - .m2/repository
   before_script:
-    - cp settings.xml /root/.m2/settings.xml
+    - cp settings-docker.xml /root/.m2/settings.xml
   script:
     - mvn package -DskipTests
   artifacts:
