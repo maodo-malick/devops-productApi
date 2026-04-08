@@ -7,7 +7,7 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
   IMAGE_NAME: $DOCKER_IMAGE
 
-# ── Job 1 : Test ─────────────────────────────────────
+# Job 1 : Test
 test:
   stage: test
   image: maven:3.9.6-eclipse-temurin-17
@@ -25,7 +25,7 @@ test:
     paths:
       - target/surefire-reports/
 
-# ── Job 2 : Build ────────────────────────────────────
+# Job 2 : Build
 build:
   stage: build
   image: maven:3.9.6-eclipse-temurin-17
@@ -43,7 +43,7 @@ build:
     paths:
       - target/*.jar
 
-# ── Job 3 : Docker ───────────────────────────────────
+# Job 3 : Docker
 docker:
   stage: docker
   image: docker:24
