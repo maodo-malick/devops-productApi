@@ -5,13 +5,14 @@ stages:
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
-  IMAGE_NAME: christianwdc/product-api
+  IMAGE_NAME: $DOCKER_IMAGE
 
+# ── Job 1 : Test ─────────────────────────────────────
 test:
   stage: test
   image: maven:3.9.6-eclipse-temurin-17
   only:
-    - main
+    - develop
   cache:
     paths:
       - .m2/repository
@@ -24,11 +25,12 @@ test:
     paths:
       - target/surefire-reports/
 
+# ── Job 2 : Build ────────────────────────────────────
 build:
   stage: build
   image: maven:3.9.6-eclipse-temurin-17
   only:
-    - main
+    - develop
   cache:
     paths:
       - .m2/repository
@@ -36,17 +38,17 @@ build:
     - cp settings-ci.xml /root/.m2/settings.xml
     - mvn install:install-file -Dfile=product-core-0.3.0.jar -DgroupId=sn.isi.l3gl.core -DartifactId=product-core -Dversion=0.3.0 -Dpackaging=jar
   script:
-    - mvn clean package -DskipTests
-    - mvn clean install
+    - mvn package -DskipTests
   artifacts:
     paths:
       - target/*.jar
 
+# ── Job 3 : Docker ───────────────────────────────────
 docker:
   stage: docker
   image: docker:24
   only:
-    - main
+    - develop
   services:
     - docker:24-dind
   variables:
